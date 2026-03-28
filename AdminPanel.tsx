@@ -245,7 +245,8 @@ export default function AdminPanel() {
                 </label>
                 <input 
                   type="text" 
-                  className="w-full px-4 py-3 rounded-xl border border-stone-200 outline-none focus:border-emerald-500 transition-colors text-stone-900 font-bold"
+                  className="w-full px-4 py-3 rounded-xl border border-stone-200 outline-none focus:border-emerald-500 transition-colors font-bold text-black bg-white"
+                  style={{ color: '#000000' }}
                   value={settings.name}
                   onChange={e => setSettings({...settings, name: e.target.value})}
                   required
@@ -258,13 +259,14 @@ export default function AdminPanel() {
                 <div className="flex gap-3">
                   <input 
                     type="color" 
-                    className="h-12 w-20 rounded-lg border border-stone-200 p-1 cursor-pointer"
+                    className="h-12 w-20 rounded-lg border border-stone-200 p-1 cursor-pointer bg-white"
                     value={settings.theme_color}
                     onChange={e => setSettings({...settings, theme_color: e.target.value})}
                   />
                   <input 
                     type="text" 
-                    className="flex-1 px-4 py-3 rounded-xl border border-stone-200 outline-none focus:border-emerald-500 transition-colors font-mono text-stone-900 font-bold"
+                    className="flex-1 px-4 py-3 rounded-xl border border-stone-200 outline-none focus:border-emerald-500 transition-colors font-mono font-bold text-black bg-white"
+                    style={{ color: '#000000' }}
                     value={settings.theme_color}
                     onChange={e => setSettings({...settings, theme_color: e.target.value})}
                   />
@@ -276,7 +278,8 @@ export default function AdminPanel() {
                 <MessageSquare className="w-3 h-3" /> Mensagem de Boas-vindas
               </label>
               <textarea 
-                className="w-full px-4 py-3 rounded-xl border border-stone-200 outline-none focus:border-emerald-500 transition-colors min-h-[100px] text-stone-900 font-medium"
+                className="w-full px-4 py-3 rounded-xl border border-stone-200 outline-none focus:border-emerald-500 transition-colors min-h-[100px] font-medium text-black bg-white"
+                style={{ color: '#000000' }}
                 placeholder="Escreva uma mensagem carinhosa para seus convidados..."
                 value={settings.welcome_message}
                 onChange={e => setSettings({...settings, welcome_message: e.target.value})}

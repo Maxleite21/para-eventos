@@ -87,7 +87,8 @@ export default function CreateEvent() {
             <input 
               type="text" 
               placeholder="Ex: Chá de Cozinha da Mel" 
-              className="w-full px-5 py-4 rounded-2xl bg-stone-50 border border-stone-100 focus:border-emerald-500 focus:bg-white outline-none transition-all font-bold text-stone-900 placeholder:text-stone-300"
+              className="w-full px-5 py-4 rounded-2xl bg-white border border-stone-200 focus:border-emerald-500 outline-none transition-all font-bold text-black placeholder:text-stone-300"
+              style={{ color: '#000000' }}
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
@@ -101,7 +102,8 @@ export default function CreateEvent() {
               <input 
                 type="text" 
                 placeholder="mel-e-max" 
-                className="w-full pl-10 pr-5 py-4 rounded-2xl bg-stone-50 border border-stone-100 focus:border-emerald-500 focus:bg-white outline-none transition-all font-bold text-stone-900 placeholder:text-stone-300"
+                className="w-full pl-10 pr-5 py-4 rounded-2xl bg-white border border-stone-200 focus:border-emerald-500 outline-none transition-all font-bold text-black placeholder:text-stone-300"
+                style={{ color: '#000000' }}
                 value={slug}
                 onChange={(e) => setSlug(e.target.value)}
                 required
