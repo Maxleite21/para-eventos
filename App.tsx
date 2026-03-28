@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import EventList from './pages/EventList'
 import CreateEvent from './pages/CreateEvent'
@@ -17,20 +17,25 @@ function App() {
       `}</style>
       <Router>
         <Routes>
-          {/* 1. Página Inicial */}
-          <Route path="/" element={<Home />} />
-          
-          {/* 2. Página de Criação */}
+          {/* 1. Rota de Criação (Prioridade 1) */}
           <Route path="/create" element={<CreateEvent />} />
-          
-          {/* 3. Painel de Administração (Tem que vir ANTES da lista comum) */}
+
+          {/* 2. Rota de Administração (Prioridade 2 - PRECISA VIR ANTES DA LISTA) */}
           <Route path="/:eventSlug/admin" element={<AdminPanel />} />
-          
-          {/* 4. Lista Pública do Evento */}
+
+          {/* 3. Rota da Lista Pública (Prioridade 3) */}
           <Route path="/:eventSlug" element={<EventList />} />
 
-          {/* 5. Caso o link esteja errado, volta para a Home */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          {/* 4. Rota da Home (Prioridade 4) */}
+          <Route path="/" element={<Home />} />
+
+          {/* 5. Rota de Erro (Caso nada combine) */}
+          <Route path="*" element={
+            <div className="p-20 text-center font-bold text-black bg-white min-h-screen">
+              Página não encontrada!<br/>
+              Endereço tentado: {window.location.pathname}
+            </div>
+          } />
         </Routes>
       </Router>
     </div>
