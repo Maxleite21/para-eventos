@@ -186,7 +186,9 @@ export default function EventList() {
           <button 
             onClick={() => setShowCustomForm(!showCustomForm)} 
             className="mt-8 text-white px-6 py-2 rounded-full transition-colors shadow-sm font-medium"
-            style={{ backgroundColor: themeColor }}
+            style={{ backgroundColor: `${themeColor}cc` }}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = themeColor)}
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = `${themeColor}cc`)}
           >
             {showCustomForm ? 'Fechar Sugestão' : 'Sugerir outro item 🎁'}
           </button>
@@ -241,10 +243,10 @@ export default function EventList() {
             return (
               <div key={gift.id} className={`bg-white rounded-2xl p-5 shadow-sm border transition-all duration-300 ${isCompleted ? 'border-stone-200 opacity-80 bg-stone-50' : 'border-[#d8e0d1] hover:shadow-lg'}`}>
                 <div className="flex flex-col h-full">
-                  <span className="text-[10px] uppercase tracking-widest font-bold mb-1" style={{ color: themeColor }}>{gift.category}</span>
+                  <span className="text-[10px] uppercase tracking-widest font-bold mb-1 opacity-50" style={{ color: themeColor }}>{gift.category}</span>
                   <h3 className={`text-lg font-semibold leading-tight mb-2 ${isCompleted ? 'text-stone-400 line-through' : 'text-[#3c4a3e]'}`}>{gift.name}</h3>
                   
-                  <div className="text-xs font-medium mb-4" style={{ color: themeColor }}>
+                  <div className="text-xs font-medium mb-4 opacity-70">
                     {gift.quantity_reserved} de {gift.quantity_needed} reservados
                   </div>
 

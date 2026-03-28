@@ -12,7 +12,10 @@ import {
   Gift, 
   Tag, 
   Hash, 
-  AlertCircle 
+  AlertCircle,
+  Type,
+  MessageSquare,
+  Palette
 } from 'lucide-react'
 
 interface GiftItem {
@@ -31,8 +34,16 @@ export default function AdminPanel() {
   const [gifts, setGifts] = useState<GiftItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [savingSettings, setSavingSettings] = useState(false)
 
-  // Form states for adding/editing
+  // Settings states
+  const [settings, setSettings] = useState({
+    name: '',
+    welcome_message: '',
+    theme_color: '#556b2f'
+  })
+
+  // Form states for adding/editing items
   const [isAdding, setIsAdding] = useState(false)
   const [editingId, setEditingId] = useState<number | null>(null)
   const [formData, setFormData] = useState({
@@ -57,6 +68,11 @@ export default function AdminPanel() {
 
       if (eventError) throw eventError
       setEvent(eventData)
+      setSettings({
+        name: eventData.name,
+        welcome_message: eventData.welcome_message || '',
+        theme_color: eventData.theme_color || '#556b2f'
+      })
 
       // Fetch gifts
       const { data: giftsData, error: giftsError } = await supabase
@@ -72,6 +88,30 @@ export default function AdminPanel() {
       setError('Não foi possível carregar os dados do evento.')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleUpdateSettings = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setSavingSettings(true)
+    try {
+      const { error } = await supabase
+        .from('events')
+        .update({
+          name: settings.name,
+          welcome_message: settings.welcome_message,
+          theme_color: settings.theme_color
+        })
+        .eq('id', event.id)
+
+      if (error) throw error
+      alert('Configurações salvas com sucesso!')
+      await fetchEventAndGifts()
+    } catch (err) {
+      alert('Erro ao salvar configurações.')
+      console.error(err)
+    } finally {
+      setSavingSettings(false)
     }
   }
 
@@ -189,10 +229,79 @@ export default function AdminPanel() {
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-6 py-10">
+      <main className="max-w-6xl mx-auto px-6 py-10 space-y-10">
+        
+        {/* Configurações do Evento */}
+        <section className="bg-white rounded-[2rem] p-8 border border-stone-200 shadow-sm">
+          <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
+            <Palette className="text-stone-400 w-5 h-5" />
+            Configurações da Página
+          </h3>
+          <form onSubmit={handleUpdateSettings} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="text-xs font-black text-stone-400 uppercase tracking-widest flex items-center gap-2">
+                  <Type className="w-3 h-3" /> Título do Evento
+                </label>
+                <input 
+                  type="text" 
+                  className="w-full px-4 py-3 rounded-xl border border-stone-200 outline-none focus:border-emerald-500 transition-colors text-stone-900 font-bold"
+                  value={settings.name}
+                  onChange={e => setSettings({...settings, name: e.target.value})}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs font-black text-stone-400 uppercase tracking-widest flex items-center gap-2">
+                  <Palette className="w-3 h-3" /> Cor do Tema
+                </label>
+                <div className="flex gap-3">
+                  <input 
+                    type="color" 
+                    className="h-12 w-20 rounded-lg border border-stone-200 p-1 cursor-pointer"
+                    value={settings.theme_color}
+                    onChange={e => setSettings({...settings, theme_color: e.target.value})}
+                  />
+                  <input 
+                    type="text" 
+                    className="flex-1 px-4 py-3 rounded-xl border border-stone-200 outline-none focus:border-emerald-500 transition-colors font-mono text-stone-900 font-bold"
+                    value={settings.theme_color}
+                    onChange={e => setSettings({...settings, theme_color: e.target.value})}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs font-black text-stone-400 uppercase tracking-widest flex items-center gap-2">
+                <MessageSquare className="w-3 h-3" /> Mensagem de Boas-vindas
+              </label>
+              <textarea 
+                className="w-full px-4 py-3 rounded-xl border border-stone-200 outline-none focus:border-emerald-500 transition-colors min-h-[100px] text-stone-900 font-medium"
+                placeholder="Escreva uma mensagem carinhosa para seus convidados..."
+                value={settings.welcome_message}
+                onChange={e => setSettings({...settings, welcome_message: e.target.value})}
+              />
+            </div>
+            <div className="flex justify-end">
+              <button 
+                type="submit" 
+                disabled={savingSettings}
+                className="bg-stone-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-stone-800 transition-all flex items-center gap-2 disabled:opacity-50"
+              >
+                {savingSettings ? 'Salvando...' : (
+                  <>
+                    <Save className="w-4 h-4" />
+                    Salvar Alterações
+                  </>
+                )}
+              </button>
+            </div>
+          </form>
+        </section>
+
         {/* Form para adicionar item */}
         {isAdding && (
-          <div className="bg-white rounded-3xl p-8 border border-emerald-100 shadow-xl mb-10 animate-in fade-in slide-in-from-top-4">
+          <div className="bg-white rounded-[2rem] p-8 border border-emerald-100 shadow-xl animate-in fade-in slide-in-from-top-4">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-xl font-bold flex items-center gap-2">
                 <Gift className="text-emerald-600 w-6 h-6" />
@@ -229,7 +338,7 @@ export default function AdminPanel() {
               </div>
               <div className="space-y-2">
                 <label className="text-xs font-black text-stone-400 uppercase tracking-widest flex items-center gap-2">
-                  <Hash className="w-3 h-3" /> Quantidade Necessária
+                  <Hash className="w-3 h-3" /> Meta (Qtd)
                 </label>
                 <div className="flex gap-4">
                   <input 
@@ -346,3 +455,4 @@ export default function AdminPanel() {
     </div>
   )
 }
+
