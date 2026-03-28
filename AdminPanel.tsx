@@ -320,7 +320,8 @@ export default function AdminPanel() {
                 <input 
                   type="text" 
                   placeholder="Ex: Air Fryer Philips" 
-                  className="w-full px-4 py-3 rounded-xl border border-stone-200 outline-none focus:border-emerald-500 transition-colors"
+                  className="w-full px-4 py-3 rounded-xl border border-stone-200 outline-none focus:border-emerald-500 transition-colors font-bold text-black bg-white"
+                  style={{ color: '#000000' }}
                   value={formData.name}
                   onChange={e => setFormData({...formData, name: e.target.value})}
                   required
@@ -333,7 +334,8 @@ export default function AdminPanel() {
                 <input 
                   type="text" 
                   placeholder="Ex: Eletrodomésticos" 
-                  className="w-full px-4 py-3 rounded-xl border border-stone-200 outline-none focus:border-emerald-500 transition-colors"
+                  className="w-full px-4 py-3 rounded-xl border border-stone-200 outline-none focus:border-emerald-500 transition-colors font-bold text-black bg-white"
+                  style={{ color: '#000000' }}
                   value={formData.category}
                   onChange={e => setFormData({...formData, category: e.target.value})}
                   required
@@ -347,7 +349,8 @@ export default function AdminPanel() {
                   <input 
                     type="number" 
                     min="1"
-                    className="flex-1 px-4 py-3 rounded-xl border border-stone-200 outline-none focus:border-emerald-500 transition-colors"
+                    className="flex-1 px-4 py-3 rounded-xl border border-stone-200 outline-none focus:border-emerald-500 transition-colors font-bold text-black bg-white"
+                    style={{ color: '#000000' }}
                     value={formData.quantity_needed}
                     onChange={e => setFormData({...formData, quantity_needed: parseInt(e.target.value) || 1})}
                     required
@@ -379,7 +382,8 @@ export default function AdminPanel() {
                       {editingId === gift.id ? (
                         <input 
                           type="text" 
-                          className="w-full px-3 py-1.5 border border-emerald-300 rounded-lg outline-none"
+                          className="w-full px-3 py-1.5 border border-emerald-300 rounded-lg outline-none font-bold text-black bg-white"
+                          style={{ color: '#000000' }}
                           value={formData.name}
                           onChange={e => setFormData({...formData, name: e.target.value})}
                         />
@@ -391,7 +395,8 @@ export default function AdminPanel() {
                       {editingId === gift.id ? (
                         <input 
                           type="text" 
-                          className="w-full px-3 py-1.5 border border-emerald-300 rounded-lg outline-none"
+                          className="w-full px-3 py-1.5 border border-emerald-300 rounded-lg outline-none font-bold text-black bg-white"
+                          style={{ color: '#000000' }}
                           value={formData.category}
                           onChange={e => setFormData({...formData, category: e.target.value})}
                         />
@@ -403,7 +408,8 @@ export default function AdminPanel() {
                       {editingId === gift.id ? (
                         <input 
                           type="number" 
-                          className="w-20 px-3 py-1.5 border border-emerald-300 rounded-lg outline-none"
+                          className="w-20 px-3 py-1.5 border border-emerald-300 rounded-lg outline-none font-bold text-black bg-white"
+                          style={{ color: '#000000' }}
                           value={formData.quantity_needed}
                           onChange={e => setFormData({...formData, quantity_needed: parseInt(e.target.value) || 1})}
                         />
