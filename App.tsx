@@ -1,11 +1,10 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import Home from './pages/Home'
 import EventList from './pages/EventList'
 import CreateEvent from './pages/CreateEvent'
 import AdminPanel from './pages/AdminPanel'
 
 function App() {
-  // HMR test comment
   return (
     <div className="selection:bg-emerald-100 selection:text-emerald-900">
       <style>{`
@@ -14,19 +13,24 @@ function App() {
           -webkit-text-fill-color: #000000 !important;
           background-color: #ffffff !important;
           opacity: 1 !important;
-          font-weight: bold !important;
-        }
-        input::placeholder {
-          color: #999999 !important;
-          -webkit-text-fill-color: #999999 !important;
         }
       `}</style>
       <Router>
         <Routes>
+          {/* 1. Página Inicial */}
           <Route path="/" element={<Home />} />
+          
+          {/* 2. Página de Criação */}
           <Route path="/create" element={<CreateEvent />} />
-          <Route path="/:eventSlug" element={<EventList />} />
+          
+          {/* 3. Painel de Administração (Tem que vir ANTES da lista comum) */}
           <Route path="/:eventSlug/admin" element={<AdminPanel />} />
+          
+          {/* 4. Lista Pública do Evento */}
+          <Route path="/:eventSlug" element={<EventList />} />
+
+          {/* 5. Caso o link esteja errado, volta para a Home */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>
     </div>
