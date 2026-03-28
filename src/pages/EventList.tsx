@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '../supabaseClient'
 
 interface Reservation {
@@ -27,6 +27,7 @@ interface EventData {
 
 export default function EventList() {
   const { eventSlug } = useParams<{ eventSlug: string }>()
+  const navigate = useNavigate()
   const [gifts, setGifts] = useState<GiftItem[]>([])
   const [eventData, setEventData] = useState<EventData | null>(null)
   const [loading, setLoading] = useState(true)
@@ -57,14 +58,16 @@ export default function EventList() {
       setEventData(event)
 
       // 2. Fetch gifts for this event
-      const { data: giftsData, error: giftsError } = await supabase
-        .from('gifts')
-        .select('*')
-        .eq('event_id', event.id)
-        .order('id', { ascending: true })
+      if (event) {
+        const { data: giftsData, error: giftsError } = await supabase
+          .from('gifts')
+          .select('*')
+          .eq('event_id', event.id)
+          .order('id', { ascending: true })
 
-      if (giftsError) throw giftsError
-      setGifts(giftsData || [])
+        if (giftsError) throw giftsError
+        setGifts(giftsData || [])
+      }
     } catch (error) {
       console.error('Erro ao carregar evento:', error)
     } finally {
@@ -132,15 +135,15 @@ export default function EventList() {
       const { error } = await supabase.from('gifts').insert([newItem])
       if (error) throw error
       await fetchEventAndGifts()
-      setCustomItem('')
-      setUserName('')
-      setReserveQty(1)
-      setShowCustomForm(false)
-      alert('Obrigado pela sugestão! O item foi reservado em seu nome.')
     } catch (error) {
       alert('Erro ao sugerir.')
       console.error(error)
     }
+
+    setCustomItem('')
+    setUserName('')
+    setReserveQty(1)
+    setShowCustomForm(false)
   }
 
   const categories = Array.from(new Set(gifts.map(g => g.category)))
@@ -148,35 +151,31 @@ export default function EventList() {
 
   if (loading) return (
     <div className="min-h-screen bg-[#f4f7f1] flex items-center justify-center">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2" style={{ borderBottomColor: eventData?.theme_color || '#556b2f' }}></div>
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2" style={{ borderColor: eventData?.theme_color || '#556b2f' }}></div>
     </div>
   )
 
   if (!eventData) return (
-    <div className="min-h-screen bg-[#f4f7f1] flex items-center justify-center">
-      <div className="text-center">
-        <h2 className="text-2xl font-bold text-stone-800">Evento não encontrado</h2>
-        <p className="text-stone-600 mt-2">O link pode estar incorreto ou o evento foi removido.</p>
-      </div>
+    <div className="min-h-screen bg-[#f4f7f1] flex flex-col items-center justify-center p-6 text-center">
+      <h2 className="text-2xl font-serif text-stone-800 mb-4">Evento não encontrado</h2>
+      <button onClick={() => navigate('/')} className="bg-stone-800 text-white px-6 py-2 rounded-full font-bold">Voltar para Início</button>
     </div>
   )
 
   const themeColor = eventData.theme_color || '#556b2f'
 
   return (
-    <div className="min-h-screen bg-[#f4f7f1] text-[#3c4a3e] font-sans pb-12">
-      {/* Header */}
+    <div className="min-h-screen bg-[#f4f7f1] text-[#3c4a3e] font-sans selection:bg-[#869477] selection:text-white pb-12">
       <header className="text-white py-16 px-6 text-center shadow-md" style={{ backgroundColor: themeColor }}>
-        <h1 className="text-4xl md:text-5xl font-serif mb-4 tracking-tight">{eventData.name}</h1>
-        <p className="text-xl font-light opacity-90 italic">Lista de Presentes</p>
+        <h1 className="text-4xl md:text-5xl font-serif mb-4 tracking-tight">Lista de Presentes ✨</h1>
+        <p className="text-xl font-light opacity-90 italic">{eventData.name}</p>
       </header>
 
       <main className="max-w-6xl mx-auto py-12 px-6">
-        {/* Welcome Message */}
         <section className="mb-12 text-center bg-white p-8 rounded-3xl shadow-sm border border-[#d8e0d1]">
-          <div className="text-3xl mb-4">😘</div>
+          <div className="text-3xl mb-4">🎁</div>
           <p className="text-xl font-medium mb-4 leading-relaxed" style={{ color: themeColor }}>
-            {eventData.welcome_message || 'Olá pessoal, estamos organizando nossa lista de presentes! Façam suas escolhas e fiquem à vontade.'}
+            {eventData.welcome_message || `Olá pessoal, estamos organizando a lista do ${eventData.name}, vamos enviar várias sugestões!`}
           </p>
           <p className="text-stone-600 max-w-2xl mx-auto">
             Escolha um item da lista e indique a quantidade que deseja presentear. Se preferir algo diferente, use o botão abaixo!
@@ -185,26 +184,28 @@ export default function EventList() {
           <button 
             onClick={() => setShowCustomForm(!showCustomForm)} 
             className="mt-8 text-white px-6 py-2 rounded-full transition-colors shadow-sm font-medium"
-            style={{ backgroundColor: themeColor }}
+            style={{ backgroundColor: `${themeColor}cc`, hover: { backgroundColor: themeColor } }}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = themeColor)}
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = `${themeColor}cc`)}
           >
             {showCustomForm ? 'Fechar Sugestão' : 'Sugerir outro item 🎁'}
           </button>
 
           {showCustomForm && (
-            <form onSubmit={handleAddCustom} className="mt-8 p-6 bg-[#f4f7f1] rounded-2xl max-w-md mx-auto space-y-4 text-left border border-[#d8e0d1]">
+            <form onSubmit={handleAddCustom} className="mt-8 p-6 bg-[#f4f7f1] rounded-2xl max-w-md mx-auto space-y-4 text-left border border-stone-200 shadow-inner">
               <h3 className="font-serif text-lg text-center" style={{ color: themeColor }}>Sugerir e Reservar Item</h3>
               <div>
-                <label className="text-xs font-bold uppercase opacity-70">Nome do Item</label>
-                <input type="text" placeholder="Ex: Air Fryer" className="w-full px-4 py-2 rounded-lg border border-[#d8e0d1] outline-none mt-1" value={customItem} onChange={(e) => setCustomItem(e.target.value)} required />
+                <label className="text-xs font-bold uppercase opacity-60">Nome do Item</label>
+                <input type="text" placeholder="Ex: Air Fryer" className="w-full px-4 py-2 rounded-lg border border-[#d8e0d1] outline-none mt-1 focus:border-emerald-500" value={customItem} onChange={(e) => setCustomItem(e.target.value)} required />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs font-bold uppercase opacity-70">Seu Nome</label>
-                  <input type="text" placeholder="Seu nome" className="w-full px-4 py-2 rounded-lg border border-[#d8e0d1] outline-none mt-1" value={userName} onChange={(e) => setUserName(e.target.value)} required />
+                  <label className="text-xs font-bold uppercase opacity-60">Seu Nome</label>
+                  <input type="text" placeholder="Seu nome" className="w-full px-4 py-2 rounded-lg border border-[#d8e0d1] outline-none mt-1 focus:border-emerald-500" value={userName} onChange={(e) => setUserName(e.target.value)} required />
                 </div>
                 <div>
-                  <label className="text-xs font-bold uppercase opacity-70">Quantidade</label>
-                  <input type="number" min="1" className="w-full px-4 py-2 rounded-lg border border-[#d8e0d1] outline-none mt-1" value={reserveQty} onChange={(e) => setReserveQty(parseInt(e.target.value))} required />
+                  <label className="text-xs font-bold uppercase opacity-60">Quantidade</label>
+                  <input type="number" min="1" className="w-full px-4 py-2 rounded-lg border border-[#d8e0d1] outline-none mt-1 focus:border-emerald-500" value={reserveQty} onChange={(e) => setReserveQty(parseInt(e.target.value))} required />
                 </div>
               </div>
               <button type="submit" className="w-full text-white py-3 rounded-lg font-medium transition-colors shadow-md" style={{ backgroundColor: themeColor }}>Confirmar Sugestão</button>
@@ -212,12 +213,11 @@ export default function EventList() {
           )}
         </section>
 
-        {/* Category Filter */}
         <div className="mb-8 flex flex-wrap gap-2 justify-center">
           <button 
             onClick={() => setSelectedCategory('Todos')} 
-            className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${selectedCategory === 'Todos' ? 'text-white' : 'bg-white border border-[#d8e0d1]'}`}
-            style={selectedCategory === 'Todos' ? { backgroundColor: themeColor } : { color: themeColor }}
+            className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${selectedCategory === 'Todos' ? 'text-white shadow-md' : 'bg-white text-stone-500 border border-[#d8e0d1]'}`}
+            style={selectedCategory === 'Todos' ? { backgroundColor: themeColor } : {}}
           >
             Todos
           </button>
@@ -225,25 +225,24 @@ export default function EventList() {
             <button 
               key={cat} 
               onClick={() => setSelectedCategory(cat)} 
-              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${selectedCategory === cat ? 'text-white' : 'bg-white border border-[#d8e0d1]'}`}
-              style={selectedCategory === cat ? { backgroundColor: themeColor } : { color: themeColor }}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${selectedCategory === cat ? 'text-white shadow-md' : 'bg-white text-stone-500 border border-[#d8e0d1]'}`}
+              style={selectedCategory === cat ? { backgroundColor: themeColor } : {}}
             >
               {cat}
             </button>
           ))}
         </div>
 
-        {/* Gift Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredGifts.map((gift) => {
             const isCompleted = gift.quantity_reserved >= gift.quantity_needed;
             return (
               <div key={gift.id} className={`bg-white rounded-2xl p-5 shadow-sm border transition-all duration-300 ${isCompleted ? 'border-stone-200 opacity-80 bg-stone-50' : 'border-[#d8e0d1] hover:shadow-lg'}`}>
                 <div className="flex flex-col h-full">
-                  <span className="text-[10px] uppercase tracking-widest font-bold mb-1" style={{ color: themeColor }}>{gift.category}</span>
+                  <span className="text-[10px] uppercase tracking-widest font-bold mb-1 opacity-50" style={{ color: themeColor }}>{gift.category}</span>
                   <h3 className={`text-lg font-semibold leading-tight mb-2 ${isCompleted ? 'text-stone-400 line-through' : 'text-[#3c4a3e]'}`}>{gift.name}</h3>
                   
-                  <div className="text-xs font-medium mb-4" style={{ color: themeColor }}>
+                  <div className="text-xs font-medium mb-4 opacity-70">
                     {gift.quantity_reserved} de {gift.quantity_needed} reservados
                   </div>
 
