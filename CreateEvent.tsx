@@ -87,15 +87,20 @@ export default function CreateEvent() {
             <input 
               type="text" 
               placeholder="Ex: Chá de Cozinha da Mel" 
-              className="w-full px-5 py-4 rounded-2xl bg-white border-2 border-stone-300 focus:border-emerald-500 outline-none transition-all font-bold text-black placeholder:text-stone-300 shadow-sm"
+              className="w-full px-5 py-4 rounded-2xl border-2 border-stone-300 outline-none transition-all font-bold shadow-sm"
               style={{ 
                 color: 'black', 
                 backgroundColor: 'white',
                 WebkitTextFillColor: 'black',
-                opacity: 1
+                opacity: 1,
+                fontSize: '18px',
+                lineHeight: '1.5'
               }}
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                console.log('Digitando nome:', e.target.value);
+                setName(e.target.value);
+              }}
               required
             />
           </div>
@@ -103,19 +108,24 @@ export default function CreateEvent() {
           <div>
             <label className="block text-xs font-black text-stone-400 uppercase tracking-widest mb-2 ml-1">Link Personalizado (slug)</label>
             <div className="relative flex items-center">
-              <span className="absolute left-5 text-stone-400 font-bold select-none">/</span>
+              <span className="absolute left-5 text-stone-400 font-bold select-none" style={{ color: '#999' }}>/</span>
               <input 
                 type="text" 
                 placeholder="mel-e-max" 
-                className="w-full pl-10 pr-5 py-4 rounded-2xl bg-white border-2 border-stone-300 focus:border-emerald-500 outline-none transition-all font-bold text-black placeholder:text-stone-300 shadow-sm"
+                className="w-full pl-10 pr-5 py-4 rounded-2xl border-2 border-stone-300 outline-none transition-all font-bold shadow-sm"
                 style={{ 
                   color: 'black', 
                   backgroundColor: 'white',
                   WebkitTextFillColor: 'black',
-                  opacity: 1
+                  opacity: 1,
+                  fontSize: '18px',
+                  lineHeight: '1.5'
                 }}
                 value={slug}
-                onChange={(e) => setSlug(e.target.value)}
+                onChange={(e) => {
+                  console.log('Digitando slug:', e.target.value);
+                  setSlug(e.target.value);
+                }}
                 required
               />
             </div>
