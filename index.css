@@ -5,9 +5,9 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light;
-  color: #1c1917;
-  background-color: #fafaf9;
+  color-scheme: light !important;
+  color: #000000 !important;
+  background-color: #ffffff !important;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -19,8 +19,23 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  color: #000000 !important;
+  background-color: #ffffff !important;
 }
 
 #root {
   width: 100%;
+}
+
+/* Reset agressivo para inputs */
+input, textarea, select {
+  color: #000000 !important;
+  background-color: #ffffff !important;
+  -webkit-text-fill-color: #000000 !important;
+  opacity: 1 !important;
+}
+
+input::placeholder, textarea::placeholder {
+  color: #a8a29e !important;
+  -webkit-text-fill-color: #a8a29e !important;
 }
