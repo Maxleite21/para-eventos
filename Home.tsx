@@ -64,7 +64,7 @@ export default function Home() {
                 <input 
                   type="text" 
                   placeholder="Já tem uma lista? Digite o nome aqui..." 
-                  className="flex-1 outline-none text-stone-800 font-bold text-lg placeholder:text-stone-300 placeholder:font-medium"
+                  className="flex-1 outline-none text-stone-900 font-bold text-lg placeholder:text-stone-300 placeholder:font-medium bg-transparent"
                   value={slug}
                   onChange={(e) => setSlug(e.target.value)}
                 />
