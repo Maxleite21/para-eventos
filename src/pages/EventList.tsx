@@ -303,6 +303,14 @@ export default function EventList() {
         <p className="text-sm uppercase tracking-widest mb-2 opacity-60">Com carinho,</p>
         <p className="text-3xl font-serif" style={{ color: themeColor }}>{eventData.name}</p>
         <p className="text-stone-400 text-xs mt-8 italic">© 2026 • GiftList PRO</p>
+        <div className="mt-6">
+          <button 
+            onClick={() => navigate(`/${eventSlug}/admin`)}
+            className="text-[10px] font-black uppercase tracking-widest text-stone-300 hover:text-stone-600 transition-colors"
+          >
+            Administrar esta lista
+          </button>
+        </div>
       </footer>
     </div>
   )
