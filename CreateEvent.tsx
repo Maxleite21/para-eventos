@@ -87,8 +87,13 @@ export default function CreateEvent() {
             <input 
               type="text" 
               placeholder="Ex: Chá de Cozinha da Mel" 
-              className="w-full px-5 py-4 rounded-2xl bg-white border border-stone-200 focus:border-emerald-500 outline-none transition-all font-bold text-black placeholder:text-stone-300"
-              style={{ color: '#000000' }}
+              className="w-full px-5 py-4 rounded-2xl bg-white border-2 border-stone-300 focus:border-emerald-500 outline-none transition-all font-bold text-black placeholder:text-stone-300 shadow-sm"
+              style={{ 
+                color: 'black', 
+                backgroundColor: 'white',
+                WebkitTextFillColor: 'black',
+                opacity: 1
+              }}
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
@@ -102,8 +107,13 @@ export default function CreateEvent() {
               <input 
                 type="text" 
                 placeholder="mel-e-max" 
-                className="w-full pl-10 pr-5 py-4 rounded-2xl bg-white border border-stone-200 focus:border-emerald-500 outline-none transition-all font-bold text-black placeholder:text-stone-300"
-                style={{ color: '#000000' }}
+                className="w-full pl-10 pr-5 py-4 rounded-2xl bg-white border-2 border-stone-300 focus:border-emerald-500 outline-none transition-all font-bold text-black placeholder:text-stone-300 shadow-sm"
+                style={{ 
+                  color: 'black', 
+                  backgroundColor: 'white',
+                  WebkitTextFillColor: 'black',
+                  opacity: 1
+                }}
                 value={slug}
                 onChange={(e) => setSlug(e.target.value)}
                 required
