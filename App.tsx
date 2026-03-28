@@ -5,7 +5,6 @@ import CreateEvent from './pages/CreateEvent'
 import AdminPanel from './pages/AdminPanel'
 
 function App() {
-  // HMR test comment
   return (
     <div className="selection:bg-emerald-100 selection:text-emerald-900">
       <style>{`
@@ -27,6 +26,8 @@ function App() {
           <Route path="/create" element={<CreateEvent />} />
           <Route path="/:eventSlug" element={<EventList />} />
           <Route path="/:eventSlug/admin" element={<AdminPanel />} />
+          {/* Rota de segurança para quando o link estiver errado */}
+          <Route path="*" element={<div className="p-10 text-center font-bold">Página não encontrada. Verifique o link!</div>} />
         </Routes>
       </Router>
     </div>
